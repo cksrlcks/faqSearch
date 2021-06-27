@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filterSearch Sample</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    
+    <div class="qna-wrapper">
+        <div class="top"><input type="text" id="search-bar" placeholder="검색어를 입력해주세요"></div>
+    </div>
+    <script>
+        var originData = [            
+            {
+                category : "배송",         
+                items : [
+                    {
+                        question: "금요일 주문했습니다. 언제쯤 배송이 가능할까요?",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "배송이 너무 안옵니다. 확인을 어떻게 하죠?",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "파손이 되어서 배송이 되었습니다.",
+                        answer : "답변1"
+                    }
+                ]      
+            },
+            {
+                category : "회원",
+                items : [
+                    {
+                        question: "회원가입은 어떻게 할 수 있나요?",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "핸드폰 번호가 없으면 가입을 하지 못하나요?",
+                        answer : "답변1"
+                    }
+                ] 
+            },
+            {
+                category : "품질",
+                items : [
+                    {
+                        question: "불량품이 배송된 것 같아요.",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "사이즈가 안맞아요.",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "생각했던 품질이 아니에요.",
+                        answer : "답변1"
+                    },
+                    {
+                        question: "너무 별로에요",
+                        answer : "답변1"
+                    }
+                ] 
+            },
+            {
+                category : "결제",
+                items : [
+                    {
+                        question: "결제를 취소하려면 어떻게하나요?",
+                        answer : "답변1"
+                    }
+                ] 
+            },
+        ]
+        var qnaContainer = document.querySelector('.qna-wrapper');
+        var searchInput = document.querySelector('#search-bar');
+
+        var resultContainer = document.createElement('div');
+        resultContainer.classList.add('result-wrapper');
+
+        function renderCategory(data){
+            //카테고리 생성        
+            var category = document.createElement('ul');
+            category.classList.add("category-list");
+
+            for(var i = 0; i < data.length; i ++){
+                var li = document.createElement('li');
+                li.classList.add('category-item');
+                li.dataset.idx = i;
+
+                var item = '';
+                item += '<a href="#" onclick="qnaShow('+ i +')">'
+                item +=     '<span class="name">'+ data[i].category +'</span><span class="count">'+ data[i].items.length +'</span>'
+                item += '</a>';
+
+                li.innerHTML = item;
+                category.appendChild(li);
+            }
+            qnaContainer.appendChild(category);          
+
+        }
+
+        function renderList(data, flag){
+            //패널 생성
+            var answerContainer = document.createElement('div');
+            answerContainer.classList.add('answer-wrapper');
+            
+            var answer = document.createElement('ul');
+            answer.classList.add("answer-list");
+
+            //초기화
+            answerContainer.innerHTML = '';
+
+            for(var i = 0; i < data.length; i ++){
+                var section = document.createElement('ul');
+                section.classList.add('answer-group');
+                section.dataset.idx = i;
+
+                if(flag) section.classList.add('active');
+
+                for(var j = 0; j < data[i].items.length; j++){
+                    var li = document.createElement('li');
+                    li.classList.add('answer-item')
+
+                    var item = '';
+                    item +=  '<div class="answer-title">'+ data[i].items[j].question +'</div>';
+                    item +=  '<div class="answer-content">'+ data[i].items[j].answer +'</div>';
+
+                    li.innerHTML = item;
+                    section.appendChild(li);
+                }                
+                
+                answerContainer.appendChild(section)
+            }
+            
+            qnaContainer.appendChild(answerContainer);
+
+            resultContainer.innerHTML = '';            
+            resultContainer.appendChild(answerContainer);
+            qnaContainer.appendChild(resultContainer);
+        }
+        
+        //첫랜더링
+        renderCategory(originData);
+        renderList(originData, false)
+        qnaShow(0);
+
+        function resetActive(){
+            var allCategory = document.querySelectorAll('.category-item');
+            var allGroup = document.querySelectorAll('.answer-group');
+
+            for(var i = 0; i < allCategory.length; i++){
+                allCategory[i].classList.remove('active')
+            }
+
+            for(var i = 0; i < allGroup.length; i++){
+                allGroup[i].classList.remove('active')
+            }
+        }
+        function qnaShow(idx){
+            searchInput.value = '';    
+            renderList(originData, false)    
+            resetActive();
+            var targets = document.querySelectorAll("[data-idx='"+ idx +"']");
+            for(var i = 0; i < targets.length; i++){
+                targets[i].classList.add('active')
+            }
+        }
+
+        document.addEventListener('click', function(e){
+            if(e.target.classList.contains('answer-title')){
+                e.target.classList.toggle('active')
+            }
+        })
+        
+        
+
+        searchInput.addEventListener('keyup', function(e){
+            var keyword = searchInput.value
+            if(keyword.length < 1 || keyword == ''){
+                resetActive();
+                renderList(originData, false)
+                qnaShow(0);
+            }else{
+                var lists = filterData(keyword);
+                if(lists.length){
+                    resetActive();
+                    renderList(lists, true);
+                }else{
+                    resultContainer.innerHTML = '<div class="error">검색결과가 없습니다.</div>'
+                }
+                
+            }
+            
+            
+
+        })
+
+        function filterData(words){
+            var results = [];
+            for(var i = 0; i < originData.length; i++) {
+                var group = {
+                        category : originData[i].category,
+                        items : []
+                    };
+                for(j = 0; j < originData[i].items.length; j++){
+                    if(originData[i].items[j].question.indexOf(words)!=-1) {                        
+                        group.items.push(originData[i].items[j]);                                              
+                    }
+                }
+                if(group.items.length) results.push(group)
+                
+            }
+            
+            return results;
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+@charset "UTF-8";
+*, *:before, *:after{box-sizing: border-box ; padding:0; margin:0;}
+ul{list-style: none;}
+a{color:inherit; text-decoration: none;}
+body{font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+    letter-spacing: -0.05em;}
+
+.qna-wrapper{max-width:800px; margin:200px auto;}
+.qna-wrapper .top{border:8px solid #eee; width:100%; height:70px; margin-bottom:30px;}
+.qna-wrapper .top input{width:100%; height:100%; padding:0 1em; font-size:15px; color:#222; border:none;}
+.qna-wrapper .top input:focus{outline:none;}
+
+.category-list{margin-bottom:20px; display: flex; flex-wrap: wrap;}
+.category-list .category-item{margin-right:6px; margin-bottom: 6px;}
+.category-list .category-item a{background:#eee; color:#888; font-size:14px; font-weight:bold; padding:0.6em 1em; border-radius: 4px;}
+.category-list .category-item.active a{background-color: rgba(49,130,246,.26); color: #1b64da;}
+.category-list .category-item a .count{padding-left:5px}
+
+.answer-wrapper{}
+.answer-wrapper .answer-group{border-top:1px solid #eee; margin-bottom:20px; display:none;}
+.answer-wrapper .answer-group.active{display: block;}
+.answer-wrapper .answer-item{border-bottom:1px solid #eee;}
+.answer-wrapper .answer-item .answer-title{font-weight:bold; color:#222; padding:1.2em 1em; cursor: pointer;}
+.answer-wrapper .answer-item .answer-title.active {background:#f8f9fa; color:#4171c0}
+.answer-wrapper .answer-item .answer-title:before{content:"Q. ";}
+.answer-wrapper .answer-content{padding:1em 1em 2em; display:none;}
+.answer-wrapper .answer-title.active ~ .answer-content{display: block;}
+
+.qna-wrapper .error{color:#888; font-size:16px; text-align: center; padding:2em 0;}
