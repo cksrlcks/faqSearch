@@ -18,7 +18,7 @@
                 category : "배송",         
                 items : [
                     {
-                        question: "금요일 주문했습니다. 언제쯤 배송이 가능할까요?",
+                        question: "금요일 결제했습니다. 언제쯤 배송이 가능할까요?",
                         answer : "답변1"
                     },
                     {
@@ -103,7 +103,7 @@
 
         }
 
-        function renderList(data, flag){
+        function renderList(data, allShow, sectionTitleShow){
             //패널 생성
             var answerContainer = document.createElement('div');
             answerContainer.classList.add('answer-wrapper');
@@ -118,8 +118,10 @@
                 var section = document.createElement('ul');
                 section.classList.add('answer-group');
                 section.dataset.idx = i;
+                section.dataset.title = data[i].category;
 
-                if(flag) section.classList.add('active');
+                if(allShow) section.classList.add('active');
+                if(sectionTitleShow) section.classList.add('title-show');
 
                 for(var j = 0; j < data[i].items.length; j++){
                     var li = document.createElement('li');
@@ -162,7 +164,7 @@
         }
         function qnaShow(idx){
             searchInput.value = '';    
-            renderList(originData, false)    
+            renderList(originData, false, false)    
             resetActive();
             var targets = document.querySelectorAll("[data-idx='"+ idx +"']");
             for(var i = 0; i < targets.length; i++){
@@ -182,13 +184,13 @@
             var keyword = searchInput.value
             if(keyword.length < 1 || keyword == ''){
                 resetActive();
-                renderList(originData, false)
+                renderList(originData, false, false)
                 qnaShow(0);
             }else{
                 var lists = filterData(keyword);
                 if(lists.length){
                     resetActive();
-                    renderList(lists, true);
+                    renderList(lists, true, true);
                 }else{
                     resultContainer.innerHTML = '<div class="error">검색결과가 없습니다.</div>'
                 }
