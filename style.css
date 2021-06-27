@@ -17,8 +17,7 @@ body{font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Apple SD
 .category-list .category-item a .count{padding-left:5px}
 
 .answer-wrapper{}
-.answer-wrapper .answer-group{margin-bottom:20px; display:none;}
-.answer-wrapper .answer-group + .answer-group{margin-top:30px;}
+.answer-wrapper .answer-group{margin-bottom:40px; display:none;}
 .answer-wrapper .answer-group:before{content:attr(data-title); display: none; font-size:16px; font-weight: bold; color:#222; margin:10px 0 20px;}
 .answer-wrapper .answer-group.title-show:before{display: block;}
 .answer-wrapper .answer-group.active{display: block;}
